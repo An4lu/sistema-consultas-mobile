@@ -39,14 +39,14 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "red",
     alignItems: "center",
     justifyContent: "center",
   },
   titulo: {
-    fontSize: 24,
+    color: "white",
+    fontSize: 40,
     fontWeight: "bold",
-    marginBottom: 20,
   },
   card: {
     width: "80%",

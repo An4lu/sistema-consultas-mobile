@@ -1,7 +1,12 @@
 import api from "./api";
+import { Consulta } from "../interfaces/consulta";
 import { StatusConsulta } from "../types/statusConsulta";
-import { Consulta } from "../interface/consulta";
 
+/**
+ * Tipo usado no formulário de agendamento.
+ * Usa medicoId e pacienteId (números) em vez dos objetos completos,
+ * pois o usuário só escolhe o ID no formulário.
+ */
 export type NovaConsulta = {
   medicoId: number;
   pacienteId: number;
@@ -21,9 +26,9 @@ export async function buscarConsultaPorId(id: number): Promise<Consulta> {
   return response.data;
 }
 
-export async function agendarConsulta(
-  novaConsulta: NovaConsulta
-): Promise<Consulta> {
+export async function agendarConsulta(novaConsulta: NovaConsulta): Promise<Consulta> {
+  // Monta o payload no formato que o backend Spring Boot espera:
+  // medico e paciente como objetos com apenas o id
   const payload = {
     medico: { id: novaConsulta.medicoId },
     paciente: { id: novaConsulta.pacienteId },
@@ -45,10 +50,7 @@ export async function confirmarConsulta(consulta: Consulta): Promise<Consulta> {
     valor: consulta.valor,
     observacoes: consulta.observacoes,
   };
-  const response = await api.put<Consulta>(
-    `/consultas/${consulta.id}`,
-    payload
-  );
+  const response = await api.put<Consulta>(`/consultas/${consulta.id}`, payload);
   return response.data;
 }
 
@@ -61,25 +63,17 @@ export async function cancelarConsulta(consulta: Consulta): Promise<Consulta> {
     valor: consulta.valor,
     observacoes: consulta.observacoes,
   };
-  const response = await api.put<Consulta>(
-    `/consultas/${consulta.id}`,
-    payload
-  );
+  const response = await api.put<Consulta>(`/consultas/${consulta.id}`, payload);
   return response.data;
 }
 
-export async function listarConsultasPorMedico(
-  medicoId: number
-): Promise<Consulta[]> {
+export async function listarConsultasPorMedico(medicoId: number): Promise<Consulta[]> {
   const response = await api.get<Consulta[]>(`/consultas/medico/${medicoId}`);
   return response.data;
 }
 
-export async function listarConsultasPorPaciente(
-  pacienteId: number
-): Promise<Consulta[]> {
-  const response = await api.get<Consulta[]>(
-    `/consultas/paciente/${pacienteId}`
-  );
+export async function listarConsultasPorPaciente(pacienteId: number): Promise<Consulta[]> {
+  const response = await api.get<Consulta[]>(`/consultas/paciente/${pacienteId}`);
   return response.data;
 }
+
